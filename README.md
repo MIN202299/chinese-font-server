@@ -32,6 +32,7 @@ python ./src/run.py
 <!-- 引入[100-700] -->
 <link rel="stylesheet" href="http://{host}:{port}/css?family={font_family}:wght@100..700"/>
 ```
+5. 查看示例 `http://localhost:3000`
 ![示例](/examples/images/1.png)
 ## 配置
 可以将分割后的字体`/dist/transform`文件夹上传自己的OSS服务器或者通过Nginx代理,
