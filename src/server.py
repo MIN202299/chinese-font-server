@@ -22,7 +22,12 @@ CORS(app)
 
 @app.route("/sayHello")
 def hello_world():
-    return "<p>Hello, World!</p>"
+  return "<p>Hello, World!</p>"
+
+@app.route("/")
+def index():
+  return send_file(path.join(path.abspath('.'), 'examples/index.html'), 'text/html')
+
 
 # https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@700&display=swap
 # https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@200..700&display=swap

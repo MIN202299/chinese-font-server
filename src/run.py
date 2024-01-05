@@ -238,7 +238,7 @@ if __name__ == '__main__':
   
   print('字体切分完成,准备启动Web服务器')
   from server import app
-  print(f'服务器已启动测试访问: http://localhost:{PORT}/sayHello')
+  print(f'服务器已启动测试访问: http://localhost:{PORT}')
   serve(app, host=HOST, port=PORT)
 
         
