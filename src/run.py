@@ -131,6 +131,19 @@ def getFontMetadata():
 def splitFont(task):
   subset.main(task)
 
+def getAllFont():
+  global metadata
+  all_font = {}
+  for item in metadata:
+    if item['font_family'] not in all_font:
+      all_font[item['font_family']] = []
+    
+    if str(item['weight']) not in all_font[item['font_family']]:
+      all_font[item['font_family']].append(str(item['weight']))
+  for key, val in all_font.items():
+    all_font[key] = ','.join(val)
+  return all_font
+
 
 if __name__ == '__main__':
   # 字体原始文件路径
@@ -168,6 +181,10 @@ if __name__ == '__main__':
   with open(DIR_FONT_FAMILY_PATH, 'w', encoding='utf-8') as f:
     json.dump(DIR_FONT_FAMILY_MAP, f, ensure_ascii=False, indent=2)
 
+  all_font = getAllFont()
+  with open('FONT_DETAIL.json', 'w', encoding='utf-8') as f:
+    json.dump(all_font, f, ensure_ascii=False, indent=2)
+  
   complete_task_keys = getCompleleTaskKey()
 
   tasks = []
