@@ -24,6 +24,7 @@ python ./src/run.py
 ```
 4. 使用
 ```html
+<!-- 所有支持的字体及字重可以在 `FONT_DETAIL.json` 查看 -->
 <!-- 默认引入所有字重 -->
 <link rel="stylesheet" href="http://{host}:{port}/css?family={font_family}"/>
 <!-- 引入字重[400] -->
