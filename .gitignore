@@ -1,0 +1,7 @@
+dist
+venv
+
+.DS_store
+font.xml
+
+__pycache__
