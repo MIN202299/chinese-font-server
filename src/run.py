@@ -124,7 +124,7 @@ def getFontMetadata():
     else:
       item['font_family'] = item['font_name']
     if not item['font_family']:
-      warnings.warn(f'找不到 font family: {item['fp']}')
+      warnings.warn(f'找不到 font family: {item["fp"]}')
 
   return metadata
 
@@ -157,6 +157,10 @@ if __name__ == '__main__':
   output_splitdir = path.join(output, 'split')
   # 支持的的字体格式
   SUPPORT_FONT_FORMAT = ['ttf', 'otf']
+  
+  for dir in [output, output_vfdir, output_nrdir, output_splitdir, fontdir, nrdir, splitdir]:
+    checkMakeDir(dir)
+
   nrfontlist = getFontList(nrdir)
   splitfontlist = getFontList(splitdir)
 
@@ -164,8 +168,6 @@ if __name__ == '__main__':
   # 这里规定一个字体文件夹就为同一个字体, 取最短的字体名字
   DIR_FONT_FAMILY_MAP = dict()
   
-  for dir in [output, output_vfdir, output_nrdir, output_splitdir]:
-    checkMakeDir(dir)
 
   metadata = getFontMetadata()
 
