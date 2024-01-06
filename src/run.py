@@ -124,7 +124,7 @@ def getFontMetadata():
     else:
       item['font_family'] = item['font_name']
     if not item['font_family']:
-      warnings.warn(f'找不到 font family: {item['fontpath']}')
+      warnings.warn(f'找不到 font family: {item['fp']}')
 
   return metadata
 
