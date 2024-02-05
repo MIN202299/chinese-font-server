@@ -245,7 +245,7 @@ if __name__ == '__main__':
         item['fp'],
         '--flavor=woff2',
         '--unicodes=*',
-        f'--output-file={path.join(output_nrdir, item['font_family'], str(item['weight']), 'all.woff2')}'
+        f"--output-file={path.join(output_nrdir, item['font_family'], str(item['weight']), 'all.woff2')}"
       ])
       checkMakeDir(path.join(output_nrdir, item['font_family'], str(item['weight'])))
       continue
@@ -254,11 +254,11 @@ if __name__ == '__main__':
     for key, val in rules.items():
       # unicode中不能存在空格
       val = val.replace(' ', '')
-      keypath = f'{dir}/{item['font_family']}/{item['weight']}/{key}.woff2'
+      keypath = f"{dir}/{item['font_family']}/{item['weight']}/{key}.woff2"
       # 过滤已完成的任务
       if keypath in complete_task_keys:
         continue
-      checkMakeDir(path.join(output, f'{dir}/{item['font_family']}/{item['weight']}'))
+      checkMakeDir(path.join(output, f"{dir}/{item['font_family']}/{item['weight']}"))
       tasks.append([
         item['fp'],
         '--flavor=woff2',

@@ -148,7 +148,7 @@ def gen_css(fonts, cache_css_path, display='swap'):
     if font['isVf']:
       dir = 'vf'
 
-    keypath = f'{dir}/{font['font_family']}/{font['weight']}'
+    keypath = f"{dir}/{font['font_family']}/{font['weight']}"
     url_keypath = keypath.replace(' ', '%20')
 
     if dir == 'small':
