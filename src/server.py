@@ -99,6 +99,22 @@ def handle_static(filename):
   except Exception as e:
     print(filename_uri)
     return f"Error proxying static file: {e}", 500
+@app.route('/allFonts', methods=['GET'])
+def handle_metadata():
+  with open('dist/metadata.json', 'r', encoding='utf-8') as f:
+    data = json.load(f)
+    fonts = {}
+    for item in data:
+      if not item['font_family'] in fonts:
+        fonts[item['font_family']] = set()
+      
+      fonts[item['font_family']].add(item['weight'])
+
+    for key, val in fonts.items():
+      wghts = list(val)
+      wghts.sort()
+      fonts[key] = wghts
+    return fonts
 
 def send_not_found():
   # not_found_path = path.join(OUTPUT_ROOT, 'cache', 'not_found.css')
@@ -167,3 +183,14 @@ if __name__ == '__main__':
   CSS_HOST_URI = 'http://localhost:3000/transform'
 
   app.run(host='0.0.0.0', port=3000, debug=True)
+  # handle_metadata()
+  # keys = 'Alibaba PuHuiTi 2.0'
+  # test = {}
+  # test[keys] = set()
+
+  # test[keys].add(1)
+  # test[keys].add(1)
+  # test[keys].add(2)
+
+  # print(test)
+

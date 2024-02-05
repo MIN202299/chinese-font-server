@@ -9,26 +9,56 @@
   <link rel="stylesheet" href="http://localhost:3000/css?family=Roboto" type="text/css" />
 
   <style>
+    @font-face {
+      font-family: adobe-notdef;
+      src: url(https://platform-assets.typekit.net/AND-Regular.woff2) format("woff2"),url(https://platform-assets.typekit.net/AND-Regular.woff) format("woff")
+    }
     h1 {
-      font-family: 'MiSans';
+      font-family: 'MiSans', adobe-notdef;
       font-weight: 400;
       font-size: 2em;
     }
     h2 {
-      font-family: 'Alibaba PuHuiTi 2.0';
+      font-family: 'Alibaba PuHuiTi 2.0', adobe-notdef;
       font-weight: 400;
       font-size: 2em;
     }
     h3 {
-      font-family: 'Roboto';
+      font-family: Roboto, adobe-notdef;
       font-weight: 400;
       font-size: 2em;
+    }
+    li {
+      font-size: 1.5em;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
+  <h1>目前支持的字体有:</h1>
+  <ul id="fonts"></ul>
+  <hr>
   <h1>Hello world$$ 小米国永 MiSans</h1>
   <h2>Hello world$$ 阿里巴巴普惠体 Alibaba PuHuiTi 2.0</h2>
   <h3>Hello world$$ Google Roboto</h3>
+
+  <script>
+    fetch('/allFonts')
+      .then(res => {
+        return res.text()
+      })
+      .then(data => {
+        console.log(data)
+        const container = document.querySelector('#fonts')
+        data = JSON.parse(data)
+        for (const key in data) {
+          console.log(key)
+          const el = document.createElement('li')
+          el.textContent = key + ': ' + data[key].join(' | ')
+          container.appendChild(el)
+        }
+
+      })
+  </script>
 </body>
 </html>

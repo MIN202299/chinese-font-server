@@ -8,6 +8,7 @@ from fetchSplitRules import fetchSplitRules
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from rich.progress import Progress, TextColumn, BarColumn, TimeElapsedColumn, TimeRemainingColumn
 from waitress import serve
+from fontTools.varLib import mutator
 
 # https://dcwjoy.oss-cn-hangzhou.aliyuncs.com/transform/
 CSS_HOST_URI = 'http://localhost:3000/transform'
@@ -19,6 +20,7 @@ OUTPUT_FONT_CHUNKS = path.join(OUTPUT_ROOT, 'transform')
 METADATA_PATH = path.join(OUTPUT_ROOT, 'metadata.json')
 RULES_PATH = path.join(OUTPUT_ROOT, 'rules.json')
 DIR_FONT_FAMILY_PATH = path.join(OUTPUT_ROOT, 'dir_font_fammily.json')
+WEIGHT_CONFIG = [250, 300, 400, 500, 600, 700, 800, 900]
 
 def getFontDetail(dir, fontpath):
   global DIR_FONT_FAMILY_MAP
@@ -46,6 +48,18 @@ def getFontDetail(dir, fontpath):
   if font_name:
     font_name = font_name.string.decode('utf-8').replace('\u0000', '')
 
+  # vf 字体自动生成不同字重的字体
+  if isVf:
+    global WEIGHT_CONFIG
+    for wght in WEIGHT_CONFIG:
+      location = { 'wght': wght }
+      tran_fontpath = getTransFp(fontpath, wght)
+      if not os.path.exists(tran_fontpath):
+        print(f'正在转换VF字体: {font_name}, 字重: {wght}')
+        _font = mutator.instantiateVariableFont(font, location)
+        _font.save(tran_fontpath)
+        _font.close()
+
   font.close()
 
   return {
@@ -54,6 +68,10 @@ def getFontDetail(dir, fontpath):
     'weight': weight,
     'isVf': isVf
   }
+
+def getTransFp(fontpath, wght):
+  cur_dir = '/'.join(fontpath.split('/')[:-1])
+  return path.join(cur_dir, f'{wght}.ttf')
 
 def getFontList(fontdir):
   fontlist = []
@@ -91,31 +109,59 @@ def getFontMetadata():
   global nrfontlist
   global splitfontlist
   global DIR_FONT_FAMILY_MAP
+  global WEIGHT_CONFIG
+
    # 字体分割过程中的元信息
   metadata = []
   for item in nrfontlist:
     font_detail = getFontDetail(item['dir'], item['fp'])
-    metadata.append({
-      'type': 'normal',
-      'fp': item['fp'],
-      'weight': font_detail['weight'],
-      'isVf': font_detail['isVf'],
-      'dir': font_detail['dir'],
-      'font_name': font_detail['font_name'],
-      'transformed': False
-    })
+    if not font_detail['isVf']:
+      metadata.append({
+        'type': 'normal',
+        'fp': item['fp'],
+        'weight': font_detail['weight'],
+        'isVf': font_detail['isVf'],
+        'dir': font_detail['dir'],
+        'font_name': font_detail['font_name'],
+        'transformed': False
+      })
+
+    else:
+      for wght in WEIGHT_CONFIG:
+        metadata.append({
+          'type': 'normal',
+          'fp': getTransFp(item['fp'], wght),
+          'weight': wght,
+          'isVf': False,
+          'dir': font_detail['dir'],
+          'font_name': font_detail['font_name'],
+          'transformed': False
+        })
   
   for item in splitfontlist:
     font_detail = getFontDetail(item['dir'], item['fp']) 
-    metadata.append({
-      'type': 'split',
-      'fp': item['fp'],
-      'weight': font_detail['weight'],
-      'isVf': font_detail['isVf'],
-      'dir': font_detail['dir'],
-      'font_name': font_detail['font_name'],
-      'transformed': False
-    })
+    if not font_detail['isVf']:
+      metadata.append({
+        'type': 'split',
+        'fp': item['fp'],
+        'weight': font_detail['weight'],
+        'isVf': font_detail['isVf'],
+        'dir': font_detail['dir'],
+        'font_name': font_detail['font_name'],
+        'transformed': False
+      })
+    else:
+      for wght in WEIGHT_CONFIG:
+        metadata.append({
+          'type': 'split',
+          'fp': getTransFp(item['fp'], wght),
+          'weight': wght,
+          'isVf': False,
+          'dir': font_detail['dir'],
+          'font_name': font_detail['font_name'],
+          'transformed': False
+        })
+      
 
   # print(metadata)
   for item in metadata:
